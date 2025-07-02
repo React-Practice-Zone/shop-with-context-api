@@ -13,16 +13,18 @@ function App() {
 
   const contextValue = {
     items: shoppingCart.items,
-    addItemToCart: handleAddItemToCart,
+    addItemToCart,
+    updateItemsQuantity,
   };
 
-  function handleAddItemToCart(id) {
+  function addItemToCart(id) {
     setShoppingCart((prevShoppingCart) => {
       const updatedItems = [...prevShoppingCart.items];
 
       const existingCartItemIndex = updatedItems.findIndex(
         (cartItem) => cartItem.id === id
       );
+
       const existingCartItem = updatedItems[existingCartItemIndex];
 
       if (existingCartItem) {
@@ -30,9 +32,11 @@ function App() {
           ...existingCartItem,
           quantity: existingCartItem.quantity + 1,
         };
+
         updatedItems[existingCartItemIndex] = updatedItem;
       } else {
         const product = DUMMY_PRODUCTS.find((product) => product.id === id);
+
         updatedItems.push({
           id: id,
           name: product.title,
@@ -47,9 +51,10 @@ function App() {
     });
   }
 
-  function handleUpdateCartItemQuantity(productId, amount) {
+  function updateItemsQuantity(productId, amount) {
     setShoppingCart((prevShoppingCart) => {
       const updatedItems = [...prevShoppingCart.items];
+
       const updatedItemIndex = updatedItems.findIndex(
         (item) => item.id === productId
       );
@@ -74,14 +79,11 @@ function App() {
 
   return (
     <CartContext.Provider value={contextValue}>
-      <Header
-        cart={shoppingCart}
-        onUpdateCartItemQuantity={handleUpdateCartItemQuantity}
-      />
+      <Header />
       <Shop>
         {DUMMY_PRODUCTS.map((product) => (
           <li key={product.id}>
-            <Product {...product} onAddToCart={handleAddItemToCart} />
+            <Product {...product} />
           </li>
         ))}
       </Shop>
